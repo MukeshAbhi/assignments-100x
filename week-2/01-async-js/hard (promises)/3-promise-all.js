@@ -27,7 +27,10 @@ function wait3(t) {
 function calculateTime(t1, t2, t3) {
     const newDate = new Date();
 
-    return  Promise.all([wait1(t1),wait2(t2),wait3(t3)]).then(()=> Date.now() - newDate )
+    return  Promise.all([wait1(t1),wait2(t2),wait3(t3)]).
+    then(()=>  {
+        return Date.now() - newDate;
+    });
 }
 
 module.exports = calculateTime;

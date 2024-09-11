@@ -43,7 +43,73 @@
   const bodyParser = require('body-parser');
   
   const app = express();
-  
+
+  let toDo = [];
+  var id = 1;
+
   app.use(bodyParser.json());
+
+  app.get('/todos', (req,res) => {
+    res.json(toDo);
+  });
+
+  app.get('/todos/:id',(req,res)=> {
+    const ID = req.params.id;
+    let todoFound = false;
+    toDo.forEach(element => {
+      if(element.ID == ID){
+        res.json(element);
+        todoFound = true;
+      }
+    });
+    if(!todoFound){
+      res.status(404).json({error : 'File not found'} )
+    }
+  });
   
+  app.post('/todos',(req,res) => {
+      const head = req.body.title;
+      const status = req.body.completed;
+      const about = req.body.description;
+      var newTodo = {"ID": id, "title": head,"completed": status, "description": about}
+      toDo.push(newTodo);
+      res.status(201).json( {ID : id})
+      id++;
+      newTodo = {};
+  });
+
+  app.put('/todos/:id', (req,res) => {
+    const ID = req.params.id;
+    const head = req.body.title;
+    const status = req.body.completed;
+    let todoFound = false;
+    toDo.forEach(element => {
+      if(ID == element.ID){
+          element.title = head;
+          element.completed = status;
+          todoFound = true;
+      }  
+    });
+    if(todoFound){
+      res.status(200).json({message : 'OK'});
+    }else {
+      res.status(404).json({error : 'Not Found'});
+    }
+  });
+
+  app.delete('/todos/:id',(req,res)=> {
+    const ID = req.params.id;
+    const todoIndex = toDo.findIndex(t => t.ID === ID);
+    if (todoIndex === -1) {
+      res.status(404).send();
+    } else {
+      toDo.splice(todoIndex,1);
+      res.status(200).send()
+    }
+  });
+
+  app.all('*',(req,res) => {
+    res.status(404).json({error : 'Not Found'});
+  });
+  app.listen(3000);
   module.exports = app;
