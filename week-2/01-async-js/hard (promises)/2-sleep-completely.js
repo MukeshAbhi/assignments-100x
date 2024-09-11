@@ -5,6 +5,16 @@
  */
 
 function sleep(milliseconds) {
+    return new Promise ((resolve)=>{
+        setTimeout(() => resolve(milliseconds),milliseconds);
+        
+    })
 }
+
+function onDone (milliseconds){
+    console.log("JS thread halts for " + milliseconds)
+}
+
+sleep(10000).then(onDone);
 
 module.exports = sleep;
