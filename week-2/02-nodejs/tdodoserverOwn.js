@@ -45,6 +45,7 @@
   const app = express();
 
   let toDo = [];
+  var id = 1;
 
   app.use(bodyParser.json());
 
@@ -53,35 +54,47 @@
   });
 
   app.get('/todos/:id',(req,res)=> {
-    const todo  = toDo.find(t => t.ID === parseInt(req.params.id));
-    if (!todo) {
+    const ID = parseInt(req.params.id);
+    let todoFound = false;
+    toDo.forEach(element => {
+      if(element.ID == ID){
+        res.json(element);
+        todoFound = true;
+      }
+    });
+    if(!todoFound){
       res.status(404).send();
-    } else {
-      res.json(todo);
     }
-   
   });
   
   app.post('/todos',(req,res) => {
-      const newTodo = {
-        ID : Math.floor(Math.random() * 1000000),
-        title: req.body.title,
-        description: req.body.description,
-      };
+      const head = req.body.title;
+      const status = req.body.completed;
+      const about = req.body.description;
+      var newTodo = {"ID": id, "title": head,"completed": status, "description": about}
       toDo.push(newTodo);
-      res.status(201).json(newTodo);
+      res.status(201).json( newTodo);
+      id++;
+      newTodo = {};
   });
 
   app.put('/todos/:id', (req,res) => {
-    const todoIndex = toDo.findIndex(t => t.ID === parseInt(req.params.id));
-    if (todoIndex === -1){
+    const ID = parseInt(req.params.id);
+    const head = req.body.title;
+    const status = req.body.completed;
+    let todoFound = false;
+    toDo.forEach(element => {
+      if(ID == element.ID){
+          element.title = head;
+          element.completed = status;
+          todoFound = true;
+      }  
+    });
+    if(todoFound){
+      res.json(toDo.ID);
+    }else {
       res.status(404).send();
-    } else {
-      toDo[todoIndex].title = req.body.title;
-      toDo[todoIndex].description = req.body.description;
-      res.json(toDo[todoIndex]);
     }
-    
   });
 
   app.delete('/todos/:id',(req,res)=> {
