@@ -41,25 +41,35 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
+  const fs = require('fs');
   
   const app = express();
 
-  let toDo = [];
-
   app.use(bodyParser.json());
 
+
   app.get('/todos', (req,res) => {
-    res.json(toDo);
+    fs.readFile('todos.json','utf-8',(err,data) => {
+        if(err){
+            return err;
+        }
+        res.send(data);
+    })
+    
   });
 
   app.get('/todos/:id',(req,res)=> {
-    const todo  = toDo.find(t => t.ID === parseInt(req.params.id));
-    if (!todo) {
-      res.status(404).send();
-    } else {
-      res.json(todo);
-    }
-   
+    fs.readFile('todos.json','utf-8',(err,data) => {
+        if(err){
+            return err;
+        }
+        const todo  = data.find(t => t.ID === parseInt(req.params.id));
+        if (!todo) {
+        res.status(404).send();
+        } else {
+        res.json(todo);
+        }
+    });
   });
   
   app.post('/todos',(req,res) => {
@@ -69,32 +79,64 @@
         completed: req.body.completed,
         description: req.body.description,
       };
-      toDo.push(newTodo);
-      res.status(201).json(newTodo);
+      fs.readFile('todos.json','utf-8',(err,data) => {
+        if(err){
+            return err;
+        }
+        const newnew = data.push(newTodo);
+        fs.writeFile('todos.json',newnew,(err) => {
+            if (err){
+                return err;
+            } 
+            res.status(201).json(newTodo);
+        });
+    });
+      
   });
 
   app.put('/todos/:id', (req,res) => {
-    const todoIndex = toDo.findIndex(t => t.ID === parseInt(req.params.id));
-    if (todoIndex === -1){
-      res.status(404).send();
-    } else {
-      toDo[todoIndex].title = req.body.title;
-      toDo[todoIndex].completed =  req.body.completed;
-      toDo[todoIndex].description = req.body.description;
-      res.json(toDo[todoIndex]);
-    }
+    fs.readFile('todos.json','utf-8',(err,data) => {
+        if(err){
+            return err;
+        }
+        const todoIndex = data.findIndex(t => t.ID === parseInt(req.params.id));
+        if (todoIndex === -1){
+        res.status(404).send();
+        } else {
+            data[todoIndex].title = req.body.title;
+            data[todoIndex].completed =  req.body.completed;
+            data[todoIndex].description = req.body.description;
+            fs.writeFile('todos.json',data,(err) => {
+                if (err){
+                    return err;
+                } 
+                res.json(toDo[todoIndex]);
+            });
+        }
+    });
+    
     
   });
 
   app.delete('/todos/:id',(req,res)=> {
-    const ID = parseInt(req.params.id);
-    const todoIndex = toDo.findIndex(t => t.ID === ID);
-    if (todoIndex === -1) {
-      res.status(404).send();
-    } else {
-      toDo.splice(todoIndex,1);
-      res.status(200).send();
-    }
+    fs.readFile('todos.json','utf-8',(err,data) => {
+        if(err){
+            return err;
+        }
+        const ID = parseInt(req.params.id);
+        const todoIndex = data.findIndex(t => t.ID === ID);
+        if (todoIndex === -1) {
+            res.status(404).send();
+          } else {
+            data.splice(todoIndex,1);
+            fs.writeFile('todos.json',data,(err) => {
+                if (err){
+                    return err;
+                }
+                res.status(200).send();
+            });
+          }
+    });
   });
 
   app.all('*',(req,res) => {
