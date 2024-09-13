@@ -87,7 +87,7 @@
         ID : Math.floor(Math.random() * 1000000),
         title: req.body.title,
         completed: req.body.completed,
-        description: req.body.description,
+        description: req.body.description
       };
       fs.readFile('todos.json','utf-8',(err,data) => {
         if(err){
@@ -116,7 +116,7 @@
         res.status(404).send();
         } else {
             const updatedTodo = {
-                ID : todos[todoIndex].id,
+                ID : todos[todoIndex].ID,
                 title: req.body.title,
                 completed: req.body.completed,
                 description: req.body.description
