@@ -17,24 +17,27 @@ setInterval(() => {
     numberOfRequestsForUser = {};
 }, 1000)
 
+
+
 function rateLimitter ( req,res,next){
+  
+  const userId =req.headers['user-id']; 
+  
+    if(numberOfRequestsForUser[userId]){
+      numberOfRequestsForUser[userId] =  numberOfRequestsForUser[userId] + 1;
+      if(numberOfRequestsForUser[userId] > 5){
+        res.status(404).send("no entry");
+      } else {
+        next();
+      }
+    } else {
+      numberOfRequestsForUser[userId] = 1;
+      next();
+    }
   
 }
 
 app.get('/user', function(req, res) {
-  let counter = 1;
-  const userId = parseInt(req.headers.user-id); 
-  
-    if(numberOfRequestsForUser.userId = userId){
-      numberOfRequestsForUser.counter = counter++ 
-    } else {
-      numberOfRequestsForUser = {
-        userId: userId,
-        counter: counter
-      }
-    }
-  
-  
   res.status(200).json({ name: 'john' });
 });
 
