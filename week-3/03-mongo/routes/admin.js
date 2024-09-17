@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const adminMiddleware = require("../middleware/admin");
 const { Admin, Course } = require("../db");
-const router = express.Router();;
+const router = Router();;
 
 // Admin Routes
 router.post('/signup', async (req, res) => {
@@ -17,16 +17,17 @@ router.post('/signup', async (req, res) => {
 router.post('/courses', adminMiddleware, async (req, res) => {
     //creat a new course
     const {title,description,price,imageLink} = req.body;
-    Course.create({
+    const newCourse = Course.create({
         title: title,
         description: description,
         price: price,
         imageLink: imageLink,
         
     });
-
+    const courseId =  (await newCourse)._id.toString();
+    console.log(courseId);
     res.json({
-        msg: 'Course created successfuly ', courseId: newCourse._id
+        msg: 'Course created successfuly ', courseId: courseId,
     })
 });
 
