@@ -9,8 +9,7 @@ You need to use mongodb to store all the data persistently.
 
 ## Routes
 
-### Admin Routes:
-
+### Admin Route
 - POST /admin/signup
   Description: Creates a new admin account.
   Input Body: { username: 'admin', password: 'pass' }

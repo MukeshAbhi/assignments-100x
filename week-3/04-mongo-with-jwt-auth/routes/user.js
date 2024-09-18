@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const adminMiddleware = require("../middleware/admin");
+const userMiddleware = require("../middleware/user");
 const { Admin, User, Course } = require("../db");
 const {JWT_SECRET} = require("../config");
 const router = Router();
@@ -49,17 +49,13 @@ router.get('/courses', async (req, res) => {
 router.post('/courses/:courseId', userMiddleware, async (req, res) => {
     // Implement course purchase logic
     const courseId = req.params.courseId;
-    const token = req.headers.authorization;// bearer token
-    const words = token.split(" ");// string
-    const jwtToken = words[1];
-    const decodedValue = jwt.verify(jwtToken,JWT_SECRET);
-    const username = decodedValue.username;
+    const username = req.username;// Retrieved from user middleware 
     
     await User.updateOne({
         username: username
     },{
         "$push" : {
-            purchsedCourse : courseId
+            purchasedCourse : courseId
         }
     })
     res.json({
@@ -69,19 +65,13 @@ router.post('/courses/:courseId', userMiddleware, async (req, res) => {
 
 router.get('/purchasedCourses', userMiddleware, async (req, res) => {
     // Implement fetching purchased courses logic
-    const token = req.headers.authorization;// bearer token
-    const words = token.split(" ");// string
-    const jwtToken = words[1];
-    const decodedValue = jwt.verify(jwtToken,JWT_SECRET);
-    const username = decodedValue.username;
+    const username = req.username;// Retrieved from user middleware
 
     const user = await User.findOne({
-        username: req.headers.username
+        username: username
     })
     const courses = await Course.find({
-        _id: {
-            "$in": user.purchasedCourses
-        }
+        _id: { "$in": user.purchasedCourse }
     });
 
     res.json({
