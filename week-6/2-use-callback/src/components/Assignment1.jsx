@@ -7,16 +7,16 @@ export function Assignment1() {
 
     // Your code starts here
     const handleIncrement = useCallback(() => {
-        setCount((count) => {
-            return count++;
+        setCount( (currentCount) => {
+            return currentCount + 1;
         });
     }, []) 
 
     const handleDecrement =  useCallback(()=> {
-        setCount(count => {
-            return count--
+        setCount((currentCount) => {
+            return currentCount - 1;
         });
-    }, [])
+    }, []) 
     // Your code ends here
 
     return (
