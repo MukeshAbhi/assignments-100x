@@ -1,0 +1,21 @@
+.box{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.title{
+    font-size: 50px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.box1{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin-left: 120px;
+}
+
+.button{
+    margin-left: 50px;
+}
