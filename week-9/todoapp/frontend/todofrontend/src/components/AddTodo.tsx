@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRecoilState } from "recoil";
+import {  useSetRecoilState } from "recoil";
 import { todoAtom } from "../store/todoatom";
 import { Todo } from "../types/todoType";
 import axios from "axios";
@@ -7,7 +7,7 @@ import axios from "axios";
 const AddTodo = ()=>{
     const [title,setTitle] = useState<string>('');
     const [description,setDescription] = useState<string>('');
-    const [todos,setTodos] = useRecoilState<Todo []>(todoAtom);
+    const setTodos = useSetRecoilState(todoAtom);
 
     const onClickHandler = async ()=>{
         if(title.trim() === '') return;
@@ -37,7 +37,7 @@ const AddTodo = ()=>{
         <div>Title</div>
         <input onChange={e => setTitle(e.target.value)} />
         <div>Description</div>
-        <input onChange={e => setDescription(e.target.value)} />
+        <input onChange={e => setDescription(e.target.value)} /> <br />
         <button onClick={onClickHandler}>Add Todo</button>
         </>
     )

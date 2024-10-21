@@ -1,17 +1,19 @@
-import {BrowserRouter, Route, Routes} from 'react-router-dom'
 
+
+import { RecoilRoot } from 'recoil'
 import './App.css'
+import AddTodo from './components/AddTodo'
+import TodoList from './components/TodoList'
 
 function App() {
   
 
   return (
     <>
-    <BrowserRouter>
-        <Routes>
-            <Route />
-        </Routes>
-    </BrowserRouter>
+     <RecoilRoot>
+          <AddTodo />
+          <TodoList />
+     </RecoilRoot>
       
     </>
   )
