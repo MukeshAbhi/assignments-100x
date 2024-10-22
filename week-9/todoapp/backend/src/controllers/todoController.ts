@@ -30,7 +30,7 @@ export const addTodos = async (req: Request, res: Response)=>{
 };
 
 export const updateTodo = async (req: Request, res: Response)=>{
-    const {id} = req.params;
+    const {id} = (req.params);
     const {isCompleted} = req.body;
     try {
        const updateTodo =  await prisma.todo.update({
@@ -42,6 +42,7 @@ export const updateTodo = async (req: Request, res: Response)=>{
         res.status(500).json({
             message: "Error updating todo"
         })
+        console.log(error);
     }
 };
 

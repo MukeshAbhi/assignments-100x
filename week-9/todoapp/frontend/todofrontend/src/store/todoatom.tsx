@@ -12,8 +12,8 @@ export const todoItemselector =selector({
     key : 'todoItemselector',
     get: ({get})=>({
         total : get(todoAtom).length,
-        completed : get(todoAtom).filter((todo)=> !todo.isCompleted).length,
-        pending : get(todoAtom).filter((todo)=> todo.isCompleted).length
+        completed : get(todoAtom).filter((todo)=> todo.isCompleted).length,
+        pending : get(todoAtom).filter((todo)=> !todo.isCompleted).length
     })
 })
 
